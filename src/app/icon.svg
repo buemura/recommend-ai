@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="url(#g)"/>
+  <!-- Sparkle/AI icon -->
+  <path d="M16 6L18.2 13.8L26 16L18.2 18.2L16 26L13.8 18.2L6 16L13.8 13.8Z" fill="white" opacity="0.95"/>
+  <path d="M24 7L25 10L28 11L25 12L24 15L23 12L20 11L23 10Z" fill="white" opacity="0.6"/>
+  <path d="M8 21L9 23L11 24L9 25L8 27L7 25L5 24L7 23Z" fill="white" opacity="0.6"/>
+</svg>

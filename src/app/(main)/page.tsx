@@ -109,7 +109,7 @@ export default function HomePage() {
       <div className="mt-12 text-center">
         <div className="inline-block neo-card-static bg-brutal-cream px-6 py-3">
           <p className="text-sm font-bold text-black/50">
-            Recomendações geradas por IA 🤖 — Powered by Gemini
+            Recomendações geradas por IA 🤖 — Powered by Gemini/OpenAI
           </p>
         </div>
       </div>

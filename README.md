@@ -1,47 +1,89 @@
 # RecomendAI
 
-RecomendAI is an AI Entertainment Picker is a web application that helps users discover new movies, TV shows, animes, music, activities based on their preferences in that day.
+RecomendAI is an AI-powered entertainment picker that helps you discover movies, TV shows, animes, and music based on your preferences. Built with a neobrutalism design in Brazilian Portuguese.
+
+![Home Page](docs/screenshots/1-home.png)
 
 ## Features
 
-- The app must be in Portuguese-Brazil
-- User login and registration (Google and email/password)
-- Activity selection
-  - Watch a movie
-  - Watch a TV show
-  - Watch an anime
-  - Listen to music
-  - Do an activity (Soon to be added)
-  - Randomly select one of the above activities
+- **AI-Powered Recommendations** - Uses Gemini/OpenAI to generate personalized suggestions
+- **Multiple Categories** - Movies, TV Shows, Animes, Music, or "Surprise Me!" (random)
+- **Smart Filters** - Genre, release year, rating, seasons, episodes, and language filters depending on category
+- **Recommendation History** - All recommendations are saved and browsable by date
+- **Group Rooms** - Create shared rooms with friends to get recommendations that suit everyone
+- **Authentication** - Google OAuth and email/password login
+- **Rate Limiting** - Daily recommendation limits per user
+- **No Duplicates** - Previously recommended items are sent to the AI to avoid repeats
 
-- If movie, TV show, or anime is selected:
-  - User can select a genre (optional)
-  - User can select a release year range (optional)
-  - User can select a rating range (optional)
-  - User can select a number of seasons range (for TV shows) (optional)
-  - User can select a number of episodes range (for TV shows and animes) (optional)
+## Screenshots
 
-- If music is selected:
-  - User can select a genre (optional)
-  - User can select a release year range (optional)
-  - User can select language (optional)
+| Filters | AI Thinking | Result |
+|---------|-------------|--------|
+| ![Filters](docs/screenshots/2-new-recommendation.png) | ![Loading](docs/screenshots/3-generating-recommendation.png) | ![Result](docs/screenshots/4-recommendation-result.png) |
 
-- If activity is selected (Soon to be added):
-  - User can select a category (e.g. going out, cooking, etc.) (optional)
-  - User can select indoor or outdoor (optional)
-  - User can select a price range (optional)
+![History](docs/screenshots/5-recommendation-history.png)
 
-- Allow users to create a shared room where they can invite friends to join and get recommendations together. The system will take into account the preferences of all users in the room to generate recommendations that suit everyone.
+## Tech Stack
 
-- System get all the inputs and generate a propmt to send to the AI model to get a recommendation. The system will also send the prviously generated recommendations to the AI model to avoid recommending the same thing again.
+- **Framework** - [Next.js 16](https://nextjs.org/) with Turbopack
+- **Styling** - [Tailwind CSS 4](https://tailwindcss.com/)
+- **Database** - PostgreSQL with [Drizzle ORM](https://orm.drizzle.team/)
+- **Auth** - [NextAuth.js v5](https://authjs.dev/) (Google + Credentials)
+- **AI** - [Google Gemini](https://ai.google.dev/) / [OpenAI](https://openai.com/)
+- **Language** - TypeScript
 
-- System saves recommendations to the user's history.
-- User can view their history of recommendations.
-- User can view details of each recommendation (e.g. for movies, TV shows, and animes: title, genre, release year, rating, number of seasons, number of episodes; for music: title, artist, genre, release year, language; for activities: title, category, indoor/outdoor, price range).
+## Getting Started
 
-## Technologies Used
+### Prerequisites
 
-- Next.js 16
-- Tailwind CSS
-- Gemini API for AI recommendations
-- IMDb API for movie, TV show, and anime details
+- Node.js 18+
+- PostgreSQL database
+- Google OAuth credentials (optional, for Google login)
+- Gemini API key and/or OpenAI API key
+
+### Setup
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/buemura/ai-entertainment-picker.git
+cd ai-entertainment-picker
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Copy the environment file and fill in your values:
+
+```bash
+cp .env.example .env
+```
+
+4. Push the database schema:
+
+```bash
+npm run db:push
+```
+
+5. Start the development server:
+
+```bash
+npm run dev
+```
+
+The app will be available at [http://localhost:3000](http://localhost:3000).
+
+### Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server with Turbopack |
+| `npm run build` | Production build |
+| `npm run start` | Start production server |
+| `npm run db:generate` | Generate Drizzle migrations |
+| `npm run db:migrate` | Run Drizzle migrations |
+| `npm run db:push` | Push schema to database |
+| `npm run db:studio` | Open Drizzle Studio |
