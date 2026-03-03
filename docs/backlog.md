@@ -2,7 +2,7 @@
 
 ## Melhorias de Código
 
-- [ ] Eliminar tipos `any` restantes e reforçar tipagem nos filtros (conversão manual com `Number()`)
+- [x] Eliminar tipos `any` restantes e reforçar tipagem nos filtros (conversão manual com `Number()`)
 - [ ] Adicionar validação de input mais rigorosa nos endpoints (ex: código da sala, filtros)
 - [ ] Adicionar rate limiting nos endpoints da API (além do rate limit de negócio já existente)
 - [ ] Implementar tratamento de timeout em chamadas de rede (fetch para AI e TMDB)

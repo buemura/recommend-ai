@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import type { ActivityType } from "@/types";
+import type { ActivityType, Filters } from "@/types";
 
 interface RecommendationData {
   id: string;
@@ -42,13 +42,25 @@ function ResultContent() {
     setLoading(true);
     setError("");
 
-    const filters: Record<string, unknown> = {};
+    const raw: Record<string, string> = {};
     searchParams.forEach((value, key) => {
       if (key !== "activityType") {
-        const num = Number(value);
-        filters[key] = isNaN(num) ? value : num;
+        raw[key] = value;
       }
     });
+
+    const filters: Filters = {
+      ...(raw.genre && { genre: raw.genre }),
+      ...(raw.yearMin && { yearMin: Number(raw.yearMin) }),
+      ...(raw.yearMax && { yearMax: Number(raw.yearMax) }),
+      ...(raw.ratingMin && { ratingMin: Number(raw.ratingMin) }),
+      ...(raw.ratingMax && { ratingMax: Number(raw.ratingMax) }),
+      ...(raw.seasonsMin && { seasonsMin: Number(raw.seasonsMin) }),
+      ...(raw.seasonsMax && { seasonsMax: Number(raw.seasonsMax) }),
+      ...(raw.episodesMin && { episodesMin: Number(raw.episodesMin) }),
+      ...(raw.episodesMax && { episodesMax: Number(raw.episodesMax) }),
+      ...(raw.language && { language: raw.language }),
+    };
 
     try {
       const res = await fetch("/api/recomendacao", {

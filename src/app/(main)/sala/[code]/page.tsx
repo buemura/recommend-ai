@@ -9,7 +9,7 @@ import {
   MUSIC_GENRES,
   MUSIC_LANGUAGES,
 } from "@/types";
-import type { ActivityType } from "@/types";
+import type { ActivityType, Filters } from "@/types";
 
 interface RoomMember {
   userId: string;
@@ -97,13 +97,13 @@ export default function SalaRoomPage({
 
   async function handlePreferencesSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const filters: Record<string, unknown> = {};
-    if (genre) filters.genre = genre;
-    if (yearMin) filters.yearMin = Number(yearMin);
-    if (yearMax) filters.yearMax = Number(yearMax);
-    if (activityType !== "music" && ratingMin)
-      filters.ratingMin = Number(ratingMin);
-    if (activityType === "music" && language) filters.language = language;
+    const filters: Filters = {
+      ...(genre && { genre }),
+      ...(yearMin && { yearMin: Number(yearMin) }),
+      ...(yearMax && { yearMax: Number(yearMax) }),
+      ...(activityType !== "music" && ratingMin && { ratingMin: Number(ratingMin) }),
+      ...(activityType === "music" && language && { language }),
+    };
 
     const res = await fetch(`/api/sala/${code}/preferencias`, {
       method: "POST",
