@@ -29,6 +29,7 @@ function ResultContent() {
     useState<RecommendationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [remaining, setRemaining] = useState<number | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const fetchRecommendation = useCallback(async () => {
@@ -68,6 +69,7 @@ function ResultContent() {
 
       const data = await res.json();
       setRecommendation(data.recommendation);
+      if (data.remaining !== undefined) setRemaining(data.remaining);
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") return;
       setError(
@@ -84,6 +86,13 @@ function ResultContent() {
     if (activityType) {
       fetchRecommendation();
     }
+    // Fetch initial rate limit info
+    fetch("/api/recomendacao/rate-limit")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.remaining !== undefined) setRemaining(data.remaining);
+      })
+      .catch(() => {});
     return () => {
       abortControllerRef.current?.abort();
     };
@@ -263,11 +272,25 @@ function ResultContent() {
         </div>
       </div>
 
+      {/* Rate limit info */}
+      {remaining !== null && (
+        <div className="mt-6 text-center">
+          <span
+            className={`neo-card-static inline-block px-4 py-2 text-sm font-bold text-black ${remaining === 0 ? "bg-brutal-red/30" : "bg-brutal-green/30"}`}
+          >
+            {remaining === 0
+              ? "🚫 Você atingiu o limite diário de recomendações"
+              : `⚡ ${remaining} recomendação${remaining > 1 ? "ões" : ""} restante${remaining > 1 ? "s" : ""} hoje`}
+          </span>
+        </div>
+      )}
+
       {/* Actions */}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <button
           onClick={fetchRecommendation}
-          className="neo-btn flex-1 bg-brutal-orange text-lg text-black"
+          disabled={remaining === 0}
+          className="neo-btn flex-1 bg-brutal-orange text-lg text-black disabled:cursor-not-allowed disabled:opacity-50"
         >
           🎲 Outra Recomendação
         </button>
