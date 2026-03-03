@@ -3,9 +3,10 @@ import { AuthProvider } from "@/components/session-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://recommendai.vercel.app"),
   title: {
-    default: "RecomendAI",
-    template: "%s | RecomendAI",
+    default: "RecommendAI",
+    template: "%s | RecommendAI",
   },
   description:
     "Descubra o que assistir, ouvir ou fazer hoje com ajuda da IA! Receba recomendações personalizadas de filmes, séries, músicas e muito mais.",
@@ -18,18 +19,19 @@ export const metadata: Metadata = {
     "entretenimento",
     "inteligência artificial",
   ],
-  authors: [{ name: "RecomendAI" }],
+  authors: [{ name: "RecommendAI" }],
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    siteName: "RecomendAI",
-    title: "RecomendAI",
+    url: "https://recommendai.vercel.app",
+    siteName: "RecommendAI",
+    title: "RecommendAI",
     description:
       "Descubra o que assistir, ouvir ou fazer hoje com ajuda da IA!",
   },
   twitter: {
     card: "summary_large_image",
-    title: "RecomendAI",
+    title: "RecommendAI",
     description:
       "Descubra o que assistir, ouvir ou fazer hoje com ajuda da IA!",
   },

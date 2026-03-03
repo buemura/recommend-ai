@@ -1,6 +1,6 @@
-# RecomendAI
+# RecommendAI
 
-RecomendAI is an AI-powered entertainment picker that helps you discover movies, TV shows, animes, and music based on your preferences. Built with a neobrutalism design in Brazilian Portuguese.
+RecommendAI is an AI-powered entertainment picker that helps you discover movies, TV shows, animes, and music based on your preferences. Built with a neobrutalism design in Brazilian Portuguese.
 
 ![Home Page](docs/screenshots/1-home.png)
 
@@ -17,8 +17,8 @@ RecomendAI is an AI-powered entertainment picker that helps you discover movies,
 
 ## Screenshots
 
-| Filters | AI Thinking | Result |
-|---------|-------------|--------|
+| Filters                                               | AI Thinking                                                  | Result                                                  |
+| ----------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------- |
 | ![Filters](docs/screenshots/2-new-recommendation.png) | ![Loading](docs/screenshots/3-generating-recommendation.png) | ![Result](docs/screenshots/4-recommendation-result.png) |
 
 ![History](docs/screenshots/5-recommendation-history.png)
@@ -78,12 +78,12 @@ The app will be available at [http://localhost:3000](http://localhost:3000).
 
 ### Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start dev server with Turbopack |
-| `npm run build` | Production build |
-| `npm run start` | Start production server |
-| `npm run db:generate` | Generate Drizzle migrations |
-| `npm run db:migrate` | Run Drizzle migrations |
-| `npm run db:push` | Push schema to database |
-| `npm run db:studio` | Open Drizzle Studio |
+| Command               | Description                     |
+| --------------------- | ------------------------------- |
+| `npm run dev`         | Start dev server with Turbopack |
+| `npm run build`       | Production build                |
+| `npm run start`       | Start production server         |
+| `npm run db:generate` | Generate Drizzle migrations     |
+| `npm run db:migrate`  | Run Drizzle migrations          |
+| `npm run db:push`     | Push schema to database         |
+| `npm run db:studio`   | Open Drizzle Studio             |

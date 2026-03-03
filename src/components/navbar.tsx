@@ -22,7 +22,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-2">
             <span className="text-2xl">🎲</span>
             <span className="font-display text-lg tracking-wide text-black sm:text-xl">
-              RecomendAI
+              RecommendAI
             </span>
           </Link>
 

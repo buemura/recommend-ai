@@ -91,7 +91,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="mb-8 text-center">
           <div className="mb-3 text-6xl">🎲</div>
-          <h1 className="font-display text-4xl text-black">RecomendAI</h1>
+          <h1 className="font-display text-4xl text-black">RecommendAI</h1>
           <p className="mt-2 text-lg font-medium text-black/70">
             Descubra o que curtir hoje!
           </p>
