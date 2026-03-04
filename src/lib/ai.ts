@@ -10,6 +10,8 @@ import type {
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "" });
 
+const AI_TIMEOUT_MS = 30_000;
+
 function buildPrompt(
   activityType: ActivityType,
   filters: Filters,
@@ -102,15 +104,21 @@ function parseJsonResponse(text: string) {
 
 async function generateWithGemini(prompt: string) {
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-  const result = await model.generateContent(prompt);
+  const result = await model.generateContent({
+    contents: [{ role: "user", parts: [{ text: prompt }] }],
+    generationConfig: {},
+  }, { timeout: AI_TIMEOUT_MS });
   return result.response.text();
 }
 
 async function generateWithOpenAI(prompt: string) {
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [{ role: "user", content: prompt }],
-  });
+  const response = await openai.chat.completions.create(
+    {
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+    },
+    { timeout: AI_TIMEOUT_MS }
+  );
   return response.choices[0].message.content || "";
 }
 

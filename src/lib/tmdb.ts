@@ -1,5 +1,6 @@
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
+const TMDB_TIMEOUT_MS = 10_000;
 
 const headers = {
   Authorization: `Bearer ${process.env.TMDB_API_READ_ACCESS_TOKEN}`,
@@ -57,7 +58,10 @@ export async function fetchMediaDetails(
     const searchEndpoint = isMovie ? "/search/movie" : "/search/tv";
     const searchUrl = `${TMDB_BASE_URL}${searchEndpoint}?query=${encodeURIComponent(title)}&language=pt-BR`;
 
-    const searchRes = await fetch(searchUrl, { headers });
+    const searchRes = await fetch(searchUrl, {
+      headers,
+      signal: AbortSignal.timeout(TMDB_TIMEOUT_MS),
+    });
     if (!searchRes.ok) return null;
 
     const searchData: TmdbSearchResponse = await searchRes.json();
@@ -69,7 +73,10 @@ export async function fetchMediaDetails(
       : `/tv/${firstResult.id}`;
     const detailUrl = `${TMDB_BASE_URL}${detailEndpoint}?language=pt-BR`;
 
-    const detailRes = await fetch(detailUrl, { headers });
+    const detailRes = await fetch(detailUrl, {
+      headers,
+      signal: AbortSignal.timeout(TMDB_TIMEOUT_MS),
+    });
     if (!detailRes.ok) return null;
 
     if (isMovie) {
