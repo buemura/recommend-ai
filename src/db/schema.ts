@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   text,
@@ -126,3 +127,46 @@ export const roomMembers = pgTable(
   },
   (t) => [primaryKey({ columns: [t.roomId, t.userId] })]
 );
+
+export const watchlists = pgTable("watchlists", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+export const watchlistItems = pgTable("watchlist_items", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  watchlistId: text("watchlist_id")
+    .notNull()
+    .references(() => watchlists.id, { onDelete: "cascade" }),
+  recommendationId: text("recommendation_id")
+    .notNull()
+    .references(() => recommendations.id, { onDelete: "cascade" }),
+  addedAt: timestamp("added_at", { mode: "date" }).defaultNow().notNull(),
+});
+
+// --- Relations ---
+
+export const watchlistsRelations = relations(watchlists, ({ many, one }) => ({
+  user: one(users, { fields: [watchlists.userId], references: [users.id] }),
+  items: many(watchlistItems),
+}));
+
+export const watchlistItemsRelations = relations(watchlistItems, ({ one }) => ({
+  watchlist: one(watchlists, {
+    fields: [watchlistItems.watchlistId],
+    references: [watchlists.id],
+  }),
+  recommendation: one(recommendations, {
+    fields: [watchlistItems.recommendationId],
+    references: [recommendations.id],
+  }),
+}));

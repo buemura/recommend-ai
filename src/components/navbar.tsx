@@ -8,6 +8,7 @@ const navLinks = [
   { href: "/", label: "Início", emoji: "🏠" },
   { href: "/sala", label: "Grupo", emoji: "👥" },
   { href: "/historico", label: "Histórico", emoji: "📜" },
+  { href: "/watchlist", label: "Listas", emoji: "📋" },
 ];
 
 export function Navbar() {

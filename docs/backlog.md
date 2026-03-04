@@ -15,6 +15,7 @@
 
 ### Alta Prioridade
 
+- [ ] **Marcar como assistido** — Permitir marcar recomendações como "assistidas" para arquivar/ocultar e tambem evitar repetições. Itens ocultos continuam acessiveis porem é preciso ir na seção de "assistidos" para ver detalhes ou reverter marcação
 - [ ] **Confirmaçao de email** — Enviar email de confirmação para validar endereço e evitar spam para usuarios cadastrados com email e senha padrao
 - [ ] **Streaming de resposta da AI** — Exibir a recomendação progressivamente ao invés de aguardar resposta completa
 - [ ] **Perfil de preferências do usuário** — Salvar gêneros e filtros favoritos para aplicar automaticamente

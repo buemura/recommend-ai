@@ -45,6 +45,19 @@ export const roomCodeSchema = z
   .string({ error: "Código da sala inválido." })
   .regex(/^[A-Z0-9]{6}$/i, "Código da sala deve ter 6 caracteres alfanuméricos.");
 
+export const createWatchlistSchema = z.object({
+  name: z
+    .string({ error: "Nome da lista é obrigatório." })
+    .min(1, "Nome da lista não pode ser vazio.")
+    .max(100, "Nome da lista muito longo (máx. 100 caracteres)."),
+});
+
+export const addWatchlistItemSchema = z.object({
+  recommendationId: z
+    .string({ error: "ID da recomendação é obrigatório." })
+    .min(1, "ID da recomendação inválido."),
+});
+
 // --- Helpers ---
 
 export async function safeParseJson(

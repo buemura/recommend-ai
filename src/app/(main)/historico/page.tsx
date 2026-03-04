@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { AddToWatchlistModal } from "@/components/add-to-watchlist-modal";
 
 interface RecommendationData {
   id: string;
@@ -64,6 +65,7 @@ export default function HistoricoPage() {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [watchlistTarget, setWatchlistTarget] = useState<string | null>(null);
   const limit = 10;
 
   async function fetchHistory(
@@ -314,17 +316,28 @@ export default function HistoricoPage() {
                         {rec.description}
                       </p>
                     </div>
-                    {/* Share + chevron */}
+                    {/* Share + watchlist + chevron */}
                     <div className="shrink-0 flex flex-col items-center justify-between self-stretch">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleShare(rec);
-                        }}
-                        className="neo-card-static bg-white px-2 py-1 text-lg cursor-pointer"
-                      >
-                        {copiedId === rec.id ? "✅" : "📤"}
-                      </button>
+                      <div className="flex flex-col gap-1">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleShare(rec);
+                          }}
+                          className="neo-card-static bg-white px-2 py-1 text-lg cursor-pointer"
+                        >
+                          {copiedId === rec.id ? "✅" : "📤"}
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setWatchlistTarget(rec.id);
+                          }}
+                          className="neo-card-static bg-white px-2 py-1 text-lg cursor-pointer"
+                        >
+                          📋
+                        </button>
+                      </div>
                       <span
                         className={`text-sm text-black/40 transition-transform md:hidden ${isExpanded ? "rotate-180" : ""}`}
                       >
@@ -347,6 +360,13 @@ export default function HistoricoPage() {
           </div>
         </div>
       ))}
+
+      {watchlistTarget && (
+        <AddToWatchlistModal
+          recommendationId={watchlistTarget}
+          onClose={() => setWatchlistTarget(null)}
+        />
+      )}
 
       {/* Load more button */}
       {recommendations.length < total && (

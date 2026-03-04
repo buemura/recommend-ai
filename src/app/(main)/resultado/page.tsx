@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { AddToWatchlistModal } from "@/components/add-to-watchlist-modal";
 import type { ActivityType, Filters } from "@/types";
 
 interface RecommendationData {
@@ -31,6 +32,7 @@ function ResultContent() {
   const [error, setError] = useState("");
   const [remaining, setRemaining] = useState<number | null>(null);
   const [shareLabel, setShareLabel] = useState("📤 Compartilhar");
+  const [showWatchlistModal, setShowWatchlistModal] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const fetchRecommendation = useCallback(async () => {
@@ -350,7 +352,20 @@ function ResultContent() {
         >
           {shareLabel}
         </button>
+        <button
+          onClick={() => setShowWatchlistModal(true)}
+          className="neo-btn bg-brutal-sky text-lg text-black"
+        >
+          📋 Salvar em Lista
+        </button>
       </div>
+
+      {showWatchlistModal && recommendation && (
+        <AddToWatchlistModal
+          recommendationId={recommendation.id}
+          onClose={() => setShowWatchlistModal(false)}
+        />
+      )}
     </div>
   );
 }
