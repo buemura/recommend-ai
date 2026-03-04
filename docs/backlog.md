@@ -4,7 +4,7 @@
 
 - [x] Eliminar tipos `any` restantes e reforçar tipagem nos filtros (conversão manual com `Number()`)
 - [x] Adicionar validação de input mais rigorosa nos endpoints (ex: código da sala, filtros)
-- [ ] Adicionar rate limiting nos endpoints da API (além do rate limit de negócio já existente)
+- [x] Adicionar rate limiting nos endpoints da API (além do rate limit de negócio já existente)
 - [ ] Implementar tratamento de timeout em chamadas de rede (fetch para AI e TMDB)
 - [ ] Adicionar cache nas chamadas da API do TMDB (por título + tipo)
 - [ ] Implementar paginação no histórico de recomendações
