@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 const navLinks = [
   { href: "/", label: "Início", emoji: "🏠" },
   { href: "/sala", label: "Grupo", emoji: "👥" },
+  { href: "/busca", label: "Busca", emoji: "🔍" },
   { href: "/historico", label: "Histórico", emoji: "📜" },
   { href: "/watchlist", label: "Listas", emoji: "📋" },
 ];

@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
         hostname: "image.tmdb.org",
         pathname: "/t/p/**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.myanimelist.net",
+        pathname: "/images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "myanimelist.net",
+        pathname: "/images/**",
+      },
     ],
   },
 };

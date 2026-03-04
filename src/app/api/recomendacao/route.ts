@@ -3,6 +3,7 @@ import { recommendations } from "@/db/schema";
 import { getRecommendation } from "@/lib/ai";
 import { auth } from "@/lib/auth";
 import { getDailyLimit, getTodayCount } from "@/lib/rate-limit";
+import { fetchAnimeDetails } from "@/lib/mal";
 import { fetchMediaDetails } from "@/lib/tmdb";
 import {
   formatZodError,
@@ -87,11 +88,11 @@ export async function POST(request: Request) {
     );
   }
 
-  // For non-music types, fetch details from TMDB
-  const tmdbDetails = await fetchMediaDetails(
-    recommendation.title,
-    resolvedType,
-  );
+  // Enrich with external data: MAL for anime, TMDB for movies/TV
+  const tmdbDetails =
+    resolvedType === "anime"
+      ? await fetchAnimeDetails(recommendation.title)
+      : await fetchMediaDetails(recommendation.title, resolvedType);
 
   // Save to history
   const [saved] = await db

@@ -114,6 +114,25 @@ export const tmdbCache = pgTable("tmdb_cache", {
   createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
+export const malCache = pgTable("mal_cache", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  title: text("title").notNull(),
+  malTitle: text("mal_title").notNull(),
+  description: text("description").notNull(),
+  genre: text("genre"),
+  releaseYear: integer("release_year"),
+  rating: real("rating"),
+  seasons: integer("seasons"),
+  episodes: integer("episodes"),
+  imageUrl: text("image_url"),
+  englishTitle: text("english_title"),
+  malUrl: text("mal_url"),
+  studios: text("studios"),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
 export const roomMembers = pgTable(
   "room_members",
   {

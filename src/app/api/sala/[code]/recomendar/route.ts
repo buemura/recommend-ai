@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { rooms, roomMembers, recommendations } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { getGroupRecommendation } from "@/lib/ai";
+import { fetchAnimeDetails } from "@/lib/mal";
 import { fetchMediaDetails } from "@/lib/tmdb";
 import { getTodayCount, getDailyLimit } from "@/lib/rate-limit";
 import { validateRoomCode } from "@/lib/validation";
@@ -115,11 +116,11 @@ export async function POST(
     );
   }
 
-  // For non-music types, fetch details from TMDB
-  const tmdbDetails = await fetchMediaDetails(
-    recommendation.title,
-    recommendation.activityType
-  );
+  // Enrich with external data: MAL for anime, TMDB for movies/TV
+  const tmdbDetails =
+    recommendation.activityType === "anime"
+      ? await fetchAnimeDetails(recommendation.title)
+      : await fetchMediaDetails(recommendation.title, recommendation.activityType);
 
   const insertedIds: string[] = [];
   for (const member of members) {

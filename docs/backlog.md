@@ -37,7 +37,7 @@
 ### Baixa Prioridade
 
 - [ ] **Recomendações sazonais** — Sugestões temáticas por época do ano (Natal, Halloween, etc.)
-- [ ] **Integração com MyAnimeList** — Enriquecer dados de anime com informações do MAL
+- [x] **Integração com MyAnimeList** — Enriquecer dados de anime com informações do MAL
 - [ ] **Providers de LLM adicionais** — Suporte a Claude, Ollama (local), Azure OpenAI
 - [ ] **PWA / App mobile** — Transformar em Progressive Web App com suporte offline
 - [ ] **Feed social** — Feed público de recomendações de outros usuários com curtidas
