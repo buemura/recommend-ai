@@ -10,7 +10,7 @@ function getClientIp(request: NextRequest): string {
   return request.headers.get("x-real-ip") ?? "unknown";
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // NextAuth routes (session, csrf, callbacks, etc.) are called frequently by SessionProvider
