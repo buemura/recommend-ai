@@ -6,7 +6,7 @@
 - [x] Adicionar validação de input mais rigorosa nos endpoints (ex: código da sala, filtros)
 - [x] Adicionar rate limiting nos endpoints da API (além do rate limit de negócio já existente)
 - [x] Implementar tratamento de timeout em chamadas de rede (fetch para AI e TMDB)
-- [ ] Adicionar cache nas chamadas da API do TMDB (por título + tipo)
+- [x] Adicionar cache nas chamadas da API do TMDB (por título + tipo)
 - [ ] Implementar paginação no histórico de recomendações
 - [ ] Melhorar segurança do código da sala (atualmente 6 chars previsíveis)
 - [ ] Reforçar validação de senha (mínimo atual de 6 chars é fraco)

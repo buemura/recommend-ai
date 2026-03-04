@@ -94,6 +94,23 @@ export const rooms = pgTable("rooms", {
   expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
 });
 
+export const tmdbCache = pgTable("tmdb_cache", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  title: text("title").notNull(),
+  activityType: text("activity_type").notNull(),
+  tmdbTitle: text("tmdb_title").notNull(),
+  description: text("description").notNull(),
+  genre: text("genre"),
+  releaseYear: integer("release_year"),
+  rating: real("rating"),
+  seasons: integer("seasons"),
+  episodes: integer("episodes"),
+  imageUrl: text("image_url"),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
 export const roomMembers = pgTable(
   "room_members",
   {

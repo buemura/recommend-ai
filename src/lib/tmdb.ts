@@ -1,3 +1,8 @@
+import { eq, and } from "drizzle-orm";
+
+import { db } from "@/db";
+import { tmdbCache } from "@/db/schema";
+
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 const TMDB_TIMEOUT_MS = 10_000;
@@ -53,7 +58,33 @@ export async function fetchMediaDetails(
 ): Promise<TmdbMediaDetails | null> {
   if (activityType === "music") return null;
 
+  const normalizedTitle = title.toLowerCase().trim();
+
   try {
+    const cached = await db
+      .select()
+      .from(tmdbCache)
+      .where(
+        and(
+          eq(tmdbCache.title, normalizedTitle),
+          eq(tmdbCache.activityType, activityType)
+        )
+      )
+      .then((rows) => rows[0]);
+
+    if (cached) {
+      return {
+        title: cached.tmdbTitle,
+        description: cached.description,
+        genre: cached.genre,
+        releaseYear: cached.releaseYear,
+        rating: cached.rating,
+        seasons: cached.seasons,
+        episodes: cached.episodes,
+        imageUrl: cached.imageUrl,
+      };
+    }
+
     const isMovie = activityType === "movie";
     const searchEndpoint = isMovie ? "/search/movie" : "/search/tv";
     const searchUrl = `${TMDB_BASE_URL}${searchEndpoint}?query=${encodeURIComponent(title)}&language=pt-BR`;
@@ -79,9 +110,11 @@ export async function fetchMediaDetails(
     });
     if (!detailRes.ok) return null;
 
+    let details: TmdbMediaDetails;
+
     if (isMovie) {
       const movie: TmdbMovieDetails = await detailRes.json();
-      return {
+      details = {
         title: movie.title,
         description: movie.overview || "Sem descrição disponível.",
         genre: movie.genres?.[0]?.name || null,
@@ -97,25 +130,40 @@ export async function fetchMediaDetails(
           ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}`
           : null,
       };
+    } else {
+      const tv: TmdbTvDetails = await detailRes.json();
+      details = {
+        title: tv.name,
+        description: tv.overview || "Sem descrição disponível.",
+        genre: tv.genres?.[0]?.name || null,
+        releaseYear: tv.first_air_date
+          ? parseInt(tv.first_air_date.substring(0, 4))
+          : null,
+        rating: tv.vote_average
+          ? Math.round(tv.vote_average * 10) / 10
+          : null,
+        seasons: tv.number_of_seasons || null,
+        episodes: tv.number_of_episodes || null,
+        imageUrl: tv.poster_path
+          ? `${TMDB_IMAGE_BASE_URL}${tv.poster_path}`
+          : null,
+      };
     }
 
-    const tv: TmdbTvDetails = await detailRes.json();
-    return {
-      title: tv.name,
-      description: tv.overview || "Sem descrição disponível.",
-      genre: tv.genres?.[0]?.name || null,
-      releaseYear: tv.first_air_date
-        ? parseInt(tv.first_air_date.substring(0, 4))
-        : null,
-      rating: tv.vote_average
-        ? Math.round(tv.vote_average * 10) / 10
-        : null,
-      seasons: tv.number_of_seasons || null,
-      episodes: tv.number_of_episodes || null,
-      imageUrl: tv.poster_path
-        ? `${TMDB_IMAGE_BASE_URL}${tv.poster_path}`
-        : null,
-    };
+    await db.insert(tmdbCache).values({
+      title: normalizedTitle,
+      activityType,
+      tmdbTitle: details.title,
+      description: details.description,
+      genre: details.genre,
+      releaseYear: details.releaseYear,
+      rating: details.rating,
+      seasons: details.seasons,
+      episodes: details.episodes,
+      imageUrl: details.imageUrl,
+    });
+
+    return details;
   } catch {
     return null;
   }
