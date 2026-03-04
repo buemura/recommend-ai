@@ -1,60 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const [isRegister, setIsRegister] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    if (isRegister) {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error);
-        setLoading(false);
-        return;
-      }
-
-      // Auto login after register
-      await signIn("credentials", {
-        email: form.email,
-        password: form.password,
-        callbackUrl: "/",
-      });
-    } else {
-      const result = await signIn("credentials", {
-        email: form.email,
-        password: form.password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError("Email ou senha incorretos.");
-        setLoading(false);
-        return;
-      }
-
-      router.push("/");
-    }
-
-    setLoading(false);
-  }
-
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       {/* Decorative elements */}
@@ -99,83 +47,8 @@ export default function LoginPage() {
 
         {/* Card */}
         <div className="neo-card-static animate-pop-in bg-white p-8">
-          <h2 className="mb-6 font-display text-2xl text-black">
-            {isRegister ? "Criar Conta" : "Entrar"}
-          </h2>
+          <h2 className="mb-6 font-display text-2xl text-black">Entrar</h2>
 
-          {error && (
-            <div className="neo-card-static mb-4 bg-brutal-red/20 p-3 text-sm font-semibold text-red-800">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {isRegister && (
-              <div>
-                <label className="mb-1 block text-sm font-bold text-black">
-                  Nome
-                </label>
-                <input
-                  type="text"
-                  className="neo-input"
-                  placeholder="Seu nome"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  required
-                />
-              </div>
-            )}
-
-            <div>
-              <label className="mb-1 block text-sm font-bold text-black">
-                Email
-              </label>
-              <input
-                type="email"
-                className="neo-input"
-                placeholder="seu@email.com"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-bold text-black">
-                Senha
-              </label>
-              <input
-                type="password"
-                className="neo-input"
-                placeholder="••••••"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-                required
-                minLength={6}
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="neo-btn w-full bg-brutal-yellow text-lg text-black"
-            >
-              {loading
-                ? "Carregando..."
-                : isRegister
-                  ? "Criar Conta"
-                  : "Entrar"}
-            </button>
-          </form>
-
-          {/* Divider */}
-          <div className="my-6 flex items-center gap-3">
-            <div className="h-0.5 flex-1 bg-black/20" />
-            <span className="text-sm font-bold text-black/50">ou</span>
-            <div className="h-0.5 flex-1 bg-black/20" />
-          </div>
-
-          {/* Google */}
           <button
             onClick={() => signIn("google", { callbackUrl: "/" })}
             className="neo-btn flex w-full items-center justify-center gap-3 bg-white text-black"
@@ -200,22 +73,6 @@ export default function LoginPage() {
             </svg>
             Entrar com Google
           </button>
-
-          {/* Toggle */}
-          <p className="mt-6 text-center text-sm text-black/70">
-            {isRegister ? "Já tem conta?" : "Não tem conta?"}{" "}
-            <button
-              type="button"
-              onClick={() => {
-                setIsRegister(!isRegister);
-                setError("");
-                setForm({ name: "", email: "", password: "" });
-              }}
-              className="font-bold text-black underline decoration-brutal-pink decoration-2 underline-offset-2 hover:text-brutal-pink"
-            >
-              {isRegister ? "Fazer login" : "Criar conta"}
-            </button>
-          </p>
         </div>
       </div>
     </div>

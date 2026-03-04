@@ -8,8 +8,6 @@
 - [x] Implementar tratamento de timeout em chamadas de rede (fetch para AI e TMDB)
 - [x] Adicionar cache nas chamadas da API do TMDB (por título + tipo)
 - [x] Implementar paginação no histórico de recomendações
-- [ ] Melhorar segurança do código da sala (atualmente 6 chars previsíveis)
-- [ ] Reforçar validação de senha (mínimo atual de 6 chars é fraco)
 - [ ] Adicionar testes unitários e E2E
 - [ ] Adicionar loading states nos formulários e modais da sala em grupo
 
@@ -17,9 +15,10 @@
 
 ### Alta Prioridade
 
+- [ ] **Confirmaçao de email** — Enviar email de confirmação para validar endereço e evitar spam para usuarios cadastrados com email e senha padrao
 - [ ] **Streaming de resposta da AI** — Exibir a recomendação progressivamente ao invés de aguardar resposta completa
 - [ ] **Perfil de preferências do usuário** — Salvar gêneros e filtros favoritos para aplicar automaticamente
-- [ ] **Watchlist / Lista de desejos** — Permitir salvar recomendações para assistir depois
+- [x] **Watchlist / Lista de desejos** — Permitir salvar recomendações para assistir depois
 - [ ] **Filtros avançados** — Busca por ator/diretor, duração, idioma/legenda, nota mínima IMDb/TMDB
 - [ ] **Onde assistir** — Integração para mostrar em quais plataformas (Netflix, Prime, etc.) o conteúdo está disponível
 - [ ] **Atualização em tempo real nas salas** — Substituir polling de 3s por WebSocket/SSE para melhor UX

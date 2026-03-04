@@ -5,21 +5,6 @@ const CURRENT_YEAR = new Date().getFullYear();
 
 // --- Schemas ---
 
-export const registerSchema = z.object({
-  name: z
-    .string({ error: "Nome é obrigatório." })
-    .min(1, "Nome é obrigatório.")
-    .max(100, "Nome muito longo (máximo 100 caracteres)."),
-  email: z
-    .string({ error: "Formato de email inválido." })
-    .email("Formato de email inválido.")
-    .max(255, "Email muito longo."),
-  password: z
-    .string({ error: "A senha deve ter pelo menos 6 caracteres." })
-    .min(6, "A senha deve ter pelo menos 6 caracteres.")
-    .max(128, "Senha muito longa (máximo 128 caracteres)."),
-});
-
 export const activityTypeSchema = z.enum(
   ["movie", "tv_show", "anime", "music", "random"],
   { error: "Tipo de atividade inválido." }
