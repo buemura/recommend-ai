@@ -6,7 +6,12 @@ import { eq, desc } from "drizzle-orm";
 import { getRecommendation } from "@/lib/ai";
 import { fetchMediaDetails } from "@/lib/tmdb";
 import { getTodayCount, DAILY_LIMIT } from "@/lib/rate-limit";
-import type { ActivityType, Filters } from "@/types";
+import {
+  safeParseJson,
+  recommendationSchema,
+  formatZodError,
+} from "@/lib/validation";
+import type { ActivityType } from "@/types";
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -26,10 +31,17 @@ export async function POST(request: Request) {
     );
   }
 
-  const { activityType, filters } = (await request.json()) as {
-    activityType: ActivityType;
-    filters: Filters;
-  };
+  const { data, error } = await safeParseJson(request);
+  if (error) return error;
+
+  const result = recommendationSchema.safeParse(data);
+  if (!result.success) {
+    return NextResponse.json(
+      { error: formatZodError(result.error) },
+      { status: 400 }
+    );
+  }
+  const { activityType, filters } = result.data;
 
   // Resolve random activity
   const resolvedType: ActivityType =

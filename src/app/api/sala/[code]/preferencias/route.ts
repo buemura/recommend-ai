@@ -3,7 +3,12 @@ import { auth } from "@/lib/auth";
 import { db } from "@/db";
 import { rooms, roomMembers } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
-import type { ActivityType, Filters } from "@/types";
+import {
+  safeParseJson,
+  roomPreferencesSchema,
+  formatZodError,
+  validateRoomCode,
+} from "@/lib/validation";
 
 export async function POST(
   req: Request,
@@ -15,18 +20,22 @@ export async function POST(
   }
 
   const { code } = await params;
-  const { activityType, filters } = (await req.json()) as {
-    activityType: ActivityType;
-    filters: Filters;
-  };
+  const codeError = validateRoomCode(code);
+  if (codeError) {
+    return NextResponse.json({ error: codeError }, { status: 400 });
+  }
 
-  const validTypes = ["movie", "tv_show", "anime", "music"];
-  if (!validTypes.includes(activityType)) {
+  const { data, error } = await safeParseJson(req);
+  if (error) return error;
+
+  const result = roomPreferencesSchema.safeParse(data);
+  if (!result.success) {
     return NextResponse.json(
-      { error: "Tipo de atividade inválido." },
+      { error: formatZodError(result.error) },
       { status: 400 }
     );
   }
+  const { activityType, filters } = result.data;
 
   const room = await db.query.rooms.findFirst({
     where: eq(rooms.code, code.toUpperCase()),

@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/db";
 import { rooms, roomMembers, users, recommendations } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { validateRoomCode } from "@/lib/validation";
 
 export async function GET(
   _req: Request,
@@ -14,6 +15,10 @@ export async function GET(
   }
 
   const { code } = await params;
+  const codeError = validateRoomCode(code);
+  if (codeError) {
+    return NextResponse.json({ error: codeError }, { status: 400 });
+  }
 
   const room = await db.query.rooms.findFirst({
     where: eq(rooms.code, code.toUpperCase()),

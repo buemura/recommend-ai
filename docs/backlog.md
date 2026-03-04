@@ -3,7 +3,7 @@
 ## Melhorias de Código
 
 - [x] Eliminar tipos `any` restantes e reforçar tipagem nos filtros (conversão manual com `Number()`)
-- [ ] Adicionar validação de input mais rigorosa nos endpoints (ex: código da sala, filtros)
+- [x] Adicionar validação de input mais rigorosa nos endpoints (ex: código da sala, filtros)
 - [ ] Adicionar rate limiting nos endpoints da API (além do rate limit de negócio já existente)
 - [ ] Implementar tratamento de timeout em chamadas de rede (fetch para AI e TMDB)
 - [ ] Adicionar cache nas chamadas da API do TMDB (por título + tipo)

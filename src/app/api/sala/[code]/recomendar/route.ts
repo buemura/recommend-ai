@@ -6,6 +6,7 @@ import { eq, and } from "drizzle-orm";
 import { getGroupRecommendation } from "@/lib/ai";
 import { fetchMediaDetails } from "@/lib/tmdb";
 import { getTodayCount, DAILY_LIMIT } from "@/lib/rate-limit";
+import { validateRoomCode } from "@/lib/validation";
 import type { ActivityType, Filters } from "@/types";
 
 export async function POST(
@@ -18,6 +19,10 @@ export async function POST(
   }
 
   const { code } = await params;
+  const codeError = validateRoomCode(code);
+  if (codeError) {
+    return NextResponse.json({ error: codeError }, { status: 400 });
+  }
 
   const room = await db.query.rooms.findFirst({
     where: eq(rooms.code, code.toUpperCase()),

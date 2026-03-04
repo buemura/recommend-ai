@@ -3,23 +3,25 @@ import bcrypt from "bcryptjs";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import {
+  safeParseJson,
+  registerSchema,
+  formatZodError,
+} from "@/lib/validation";
 
 export async function POST(request: Request) {
-  const { name, email, password } = await request.json();
+  const { data, error } = await safeParseJson(request);
+  if (error) return error;
 
-  if (!name || !email || !password) {
+  const result = registerSchema.safeParse(data);
+  if (!result.success) {
     return NextResponse.json(
-      { error: "Nome, email e senha são obrigatórios." },
+      { error: formatZodError(result.error) },
       { status: 400 }
     );
   }
 
-  if (password.length < 6) {
-    return NextResponse.json(
-      { error: "A senha deve ter pelo menos 6 caracteres." },
-      { status: 400 }
-    );
-  }
+  const { name, email, password } = result.data;
 
   const existingUser = await db
     .select()
