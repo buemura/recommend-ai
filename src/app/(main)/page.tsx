@@ -2,7 +2,8 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { DailyWelcomeDialog } from "@/components/daily-welcome-dialog";
 
 const activities = [
   {
@@ -45,12 +46,28 @@ const activities = [
 export default function HomePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [rateLimit, setRateLimit] = useState<{
+    limit: number;
+    used: number;
+    remaining: number;
+  } | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
     }
   }, [status, router]);
+
+  useEffect(() => {
+    if (status !== "authenticated") return;
+    fetch("/api/recomendacao/rate-limit")
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then(setRateLimit)
+      .catch(() => {});
+  }, [status]);
 
   if (status === "loading") {
     return (
@@ -75,6 +92,8 @@ export default function HomePage() {
 
   return (
     <div>
+      <DailyWelcomeDialog />
+
       {/* Header */}
       <div className="mb-10 text-center">
         <h1 className="font-display text-4xl text-black sm:text-5xl">
@@ -83,6 +102,21 @@ export default function HomePage() {
         <p className="mt-3 text-lg font-medium text-black/60">
           Escolha uma atividade e deixe a IA fazer a mágica ✨
         </p>
+
+        {rateLimit && (
+          <div className="mt-4 inline-flex items-center gap-2 neo-card-static bg-white px-4 py-2">
+            <span className="text-lg">🎟️</span>
+            <span className="text-sm font-bold text-black/70">
+              {rateLimit.used}/{rateLimit.limit} usados
+            </span>
+            <span className="text-black/30">|</span>
+            <span
+              className={`text-sm font-bold ${rateLimit.remaining === 0 ? "text-brutal-red" : "text-brutal-green"}`}
+            >
+              {rateLimit.remaining} restantes
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Activity Grid */}
