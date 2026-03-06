@@ -7,6 +7,7 @@ import {
   real,
   boolean,
   primaryKey,
+  unique,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -174,6 +175,23 @@ export const watchlistItems = pgTable("watchlist_items", {
   addedAt: timestamp("added_at", { mode: "date" }).defaultNow().notNull(),
 });
 
+export const likes = pgTable(
+  "likes",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    recommendationId: text("recommendation_id")
+      .notNull()
+      .references(() => recommendations.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  },
+  (t) => [unique().on(t.userId, t.recommendationId)]
+);
+
 // --- Relations ---
 
 export const watchlistsRelations = relations(watchlists, ({ many, one }) => ({
@@ -188,6 +206,25 @@ export const watchlistItemsRelations = relations(watchlistItems, ({ one }) => ({
   }),
   recommendation: one(recommendations, {
     fields: [watchlistItems.recommendationId],
+    references: [recommendations.id],
+  }),
+}));
+
+export const recommendationsRelations = relations(
+  recommendations,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [recommendations.userId],
+      references: [users.id],
+    }),
+    likes: many(likes),
+  })
+);
+
+export const likesRelations = relations(likes, ({ one }) => ({
+  user: one(users, { fields: [likes.userId], references: [users.id] }),
+  recommendation: one(recommendations, {
+    fields: [likes.recommendationId],
     references: [recommendations.id],
   }),
 }));

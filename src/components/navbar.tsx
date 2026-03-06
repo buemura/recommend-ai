@@ -3,18 +3,49 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 
-const navLinks = [
+const primaryLinks = [
   { href: "/", label: "Início", emoji: "🏠" },
-  { href: "/sala", label: "Grupo", emoji: "👥" },
+  { href: "/feed", label: "Feed", emoji: "📢" },
   { href: "/busca", label: "Busca", emoji: "🔍" },
+];
+
+const secondaryLinks = [
+  { href: "/sala", label: "Grupo", emoji: "👥" },
   { href: "/historico", label: "Histórico", emoji: "📜" },
   { href: "/watchlist", label: "Listas", emoji: "📋" },
 ];
 
+const allLinks = [...primaryLinks, ...secondaryLinks];
+
 export function Navbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
+        setMoreOpen(false);
+      }
+    }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMoreOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [moreOpen]);
+
+  const isSecondaryActive = secondaryLinks.some(
+    (link) => pathname === link.href
+  );
 
   return (
     <>
@@ -30,7 +61,7 @@ export function Navbar() {
 
           {/* Desktop nav links */}
           <div className="hidden items-center gap-2 md:flex">
-            {navLinks.map((link) => (
+            {primaryLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -44,6 +75,40 @@ export function Navbar() {
                 {link.label}
               </Link>
             ))}
+
+            {/* More dropdown */}
+            <div className="relative" ref={moreRef}>
+              <button
+                onClick={() => setMoreOpen((v) => !v)}
+                className={`neo-btn text-sm ${
+                  isSecondaryActive
+                    ? "bg-black text-white"
+                    : "bg-white text-black hover:bg-brutal-cream"
+                }`}
+              >
+                <span className="mr-1">📌</span>
+                Mais ▾
+              </button>
+              {moreOpen && (
+                <div className="absolute right-0 top-full z-50 mt-2 min-w-[160px] rounded-xl border-3 border-black bg-white p-1 shadow-[6px_6px_0px_0px_#000]">
+                  {secondaryLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMoreOpen(false)}
+                      className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold transition-colors ${
+                        pathname === link.href
+                          ? "bg-black text-white"
+                          : "text-black hover:bg-brutal-cream"
+                      }`}
+                    >
+                      <span>{link.emoji}</span>
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {session?.user && (
@@ -78,7 +143,7 @@ export function Navbar() {
       {/* Mobile bottom tab bar */}
       <div className="fixed bottom-0 left-0 right-0 z-50 border-t-3 border-black bg-brutal-yellow md:hidden">
         <div className="flex">
-          {navLinks.map((link) => (
+          {allLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
